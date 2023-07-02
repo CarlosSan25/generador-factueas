@@ -72,7 +72,7 @@ $html =
 '
 <style>
     body{
-        background: url("http://localhost/pdf/background1.png");
+        background: url("http://localhost/pdf/background.png");
         background-size: cover;
     }
     *{margin:0;padding:0}
