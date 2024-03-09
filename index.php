@@ -1,32 +1,20 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <title>Gasaltur PDFs</title>
-</head>
+<?php
+$action = "pdf.php";
+if(isset($_GET["token"]) && $_GET["token"] == "gasaltur"){
+    $action = "pdf-gasaltur.php";
+}
+
+include 'head.php';
+?>
 <style>
-    input::placeholder{
-        color: blue;
-    }
-    *::-webkit-input-placeholder { color: blue; }
-    *::-moz-placeholder { color: blue; }
+	#filas div{
+		padding: 0;
+		padding-left: 5px;
+	}
 </style>
-<body class="overflow-hidden">
-    <div>
-        <div class="row bg-primary">
-            <div class="col-12 text-center text-light">
-                <h1>Generador de Facturas</h1>
-            </div>
-        </div>
-    </div>
-    <form action="pdf.php" method="post">
+<form action="<?=$action?>" method="post" class="p-3">
         <div class="row justify-content-evenly mt-4 p-2">
-            <div class="col-5">
+            <div class="col-12 col-md-5">
                 <h2>Datos del cliente</h2>
                 <div class="row mt-4">
                     <div class="col-6">
@@ -36,10 +24,10 @@
                         </div>
                     </div>
                     <div class="col-6">
-                        <label for="dniCliente" class="form-label">Numero de identificación fiscal</label>
+                        <label for="dniCliente" class="form-label">Identificación fiscal</label>
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" id="dniCliente" name="dniCliente" placeholder="Ej. 14411270E" required>
-                            <select class="form-select" id="tipoDni" name="tipoDni" aria-label="tipo de identificacion">
+                            <select class="form-select" id="tipoID" name="tipoID" aria-label="tipo de identificacion">
                               <option selected>Tipo de documento</option>
                               <option value="1">DNI</option>
                               <option value="2">CIF</option>
@@ -78,12 +66,22 @@
                     </div>
                 </div>               
             </div>
-            <div class="col-5">
+            <div class="col-12 col-md-5">
                 <h2>Datos de la factura</h2>
                 <div class="row mt-4">
+                    <div class="col-12 mb-3">
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipoCliente" id="general" value="general" checked>
+                            <label class="form-check-label" for="general">General</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="tipoCliente" id="comunidad" value="comunidad">
+                            <label class="form-check-label" for="comunidad">Comunidad</label>
+                        </div>
+                    </div>
                     <div class="col-4">
                         <div class="mb-3">
-                            <label for="numeroFactura" class="form-label">Número de factura</label>
+                            <label for="numeroFactura" class="form-label">Nº de factura</label>
                             <input type="number" class="form-control" id="numeroFactura" name="numeroFactura" required>
                         </div>
                     </div>
@@ -104,13 +102,13 @@
                 <h3>Filas</h3>
                 <div id="filas">
                     <div class="row mt-4">
-                        <div class="col-8">
+                        <div class="col-7">
                             <div class="mb-3">
                                 <label for="conceptoFactura" class="form-label">Concepto</label>
                                 <input type="text" class="form-control" id="conceptoFactura" name="conceptoFactura[]" required>
                             </div>
                         </div>
-                        <div class="col-3">
+                        <div class="col-4">
                             <div class="mb-3">
                                 <label for="importeFactura" class="form-label">Importe (€)</label>
                                 <input type="number" class="form-control" id="importeFactura" name="importeFactura[]" step=".01" required>
@@ -122,10 +120,16 @@
                         </div>
                     </div>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="almacenar" name="almacenar" checked>
+                    <label class="form-check-label" for="almacenar">
+                        Almacenar Factura
+                    </label>
+                </div>
             </div>
         </div>
-        <div class="row justify-content-center">
-            <div class="col-1">
+        <div class="row">
+            <div class="col-12 text-center">
                 <button type="submit" class="btn btn-primary">Crear Factura</button>
             </div>
         </div>

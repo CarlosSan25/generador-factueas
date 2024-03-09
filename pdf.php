@@ -1,78 +1,23 @@
 <?php
 
 require_once 'dompdf/autoload.inc.php';
+require_once 'class/factura.php';
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
 $options = new Options();
-$options->set('chroot', 'http://localhost/pdf');
+$options->set('chroot', $_SERVER['HTTP_HOST']);
 $options->set('isRemoteEnabled', TRUE);
 
-
-class PDF extends Dompdf{
-    private $isRemoteEnabled = true;
-    protected $nombreCliente;
-    protected $dniCliente;
-    protected $tipoDNI;
-    protected $direccion;
-    protected $urbanizacionCliente;
-    protected $codigo_postal;
-    protected $localidad;
-    protected $numeroFactura;
-    protected $fechaFactura;
-    protected $ivaFactura;
-    protected $filas = array();
-
-    public function setDatos(){
-        $this->nombreCliente = $_POST['nombreCliente'];
-        $this->dniCliente = $_POST['dniCliente'];
-        if($_POST['tipoDni'] == 1){
-            $this->tipoDNI = "DNI";
-        } else if($_POST['tipoDni'] == 2){
-            $this->tipoDNI = "CIF";
-        } else{
-            $this->tipoDNI = null;
-        }
-        $this->direccion = $_POST['direccion'];
-        $this->urbanizacionCliente = $_POST['urbanizacionCliente'];
-        $this->codigo_postal = $_POST['codigo_postal'];
-        $this->localidad = $_POST['localidad'];
-        $this->numeroFactura = $_POST['numeroFactura'];
-        $this->fechaFactura = $_POST['fechaFactura'];
-        $this->ivaFactura = $_POST['ivaFactura'];
-        $this->filas[0] = $_POST['conceptoFactura'];
-        $this->filas[1] = $_POST['importeFactura'];
-    }
-
-    public function getDatos(){
-        $data = array(
-            "nombre" => $this->nombreCliente,
-            "dni" => $this->dniCliente,
-            "tipoDNI" => $this->tipoDNI,
-            "direccion" => $this->direccion,
-            "urbanizacion" => $this->urbanizacionCliente,
-            "codigo_postal" => $this->codigo_postal,
-            "localidad" => $this->localidad,
-            "numeroFactura" => $this->numeroFactura,
-            "fecha" => $this->fechaFactura,
-            "iva" => $this->ivaFactura,
-            "conceptos" => $this->filas[0],
-            "importes" => $this->filas[1]
-        );
-        
-        return $data;
-    }
-}
-
-$pdf = new PDF($options);
-$pdf->setDatos();
-$data = $pdf->getDatos();
+$factura = new Factura();
+$factura->assignData();
+$data = $factura->getDatos();
 
 $html =
 '
 <style>
     body{
-        background: url("http://localhost/pdf/background.png");
+        background: url("https://facturas.cavellan.es/background.png");
         background-size: cover;
     }
     *{margin:0;padding:0}
@@ -201,7 +146,7 @@ $html =
         <p class="bb">'. $data["direccion"] .'</p>
         <p class="bb">'.$data['urbanizacion'].'</p>
         <p class="bb">'.$data['codigo_postal'].' - '.$data['localidad'].'</p>
-        <p>'.$data['tipoDNI'].' - '.$data['dni'].'</p>
+        <p>'.$data['tipoID'].' - '.$data['dni'].'</p>
     </div>
     <h1 class="factura">FACTURA</h1>
     <div class="numero_factura">
@@ -237,8 +182,11 @@ foreach($data['importes'] as $importe){
     $base += $importe;
 }
 
+$base = number_format($base, 2, ',', '.');
 $iva = ($data['iva']/100) * $base;
+$iva = number_format($iva, 2, ',', '.');
 $total = $base+$iva;
+$total = number_format($total, 2, ',', '.');
 
 $html .= '<tbody>
         <div class="n_cuenta">SABADELL NºCUENTA: ES60 0049 1500 0512 3456 7892</div>
@@ -247,17 +195,17 @@ $html .= '<tbody>
             <tr class="tr-total">
                 <td></td>
                 <td class="total-izq"><strong>BASE IMPONIBLE</strong></td>
-                <td class="total-der">'.number_format($base, 2, ',', '.').' €<td>
+                <td class="total-der">'.$base.' €<td>
             </tr>
             <tr class="tr-total">
                 <td></td>
                 <td class="total-izq"><strong>I.V.A. '.$data['iva'].'%</strong></td>
-                <td class="total-der">'.number_format($iva, 2, ',', '.').' €<td>
+                <td class="total-der">'.$iva.' €<td>
             </tr>
             <tr>
                 <td></td>
                 <td class="total-izq"><strong>TOTAL FACTURA</strong></td>
-                <td class="total-der">'.number_format($total, 2, ',', '.').' €<td>
+                <td class="total-der">'.$total.' €<td>
             </tr>
         </table>
         <p class="foot info">C/ Calle de ejemplo de la empresa, 3 - Telf. y Fax 965 11 22 33 - empresa@dominio.com - 03526 MADRID</p>
@@ -266,6 +214,7 @@ $html .= '<tbody>
         <p class="lateral">Registro Mercantil de Madrid, Tomo 2.394, Libro 8, de la Sección 2ª, Hoja B-24267, Inscripción 1ª CIF B-25791259 - EMPRESA S.L.</p>
         </body>';
 
+$pdf = new Dompdf($options);
 $pdf->loadHtml($html);
 
 // (Optional) Setup the paper size and orientation
@@ -275,29 +224,19 @@ $pdf->setPaper('A4');
 $pdf->render();
 
 // Output del PDF para almacenarlo
-$factura = $pdf->output();
+$facturaRender = $pdf->output();
 
-$count = 0;
+if($data["almacenar"]){
 
-while(file_exists("facturas/".str_replace(' ', '', $data['nombre']).$data['fecha'].".pdf")){
-    if( $count == 0 ){
-        $count ++;
-    }
-    else if($count != 0 && file_exists("facturas/".str_replace(' ', '', $data['nombre']).$data['fecha']."[".$count."]".".pdf")){
-        $count++;
-    } else{
-        break;
-    }
-}
+    $factura->assignCalcData($base, $iva, $total);
+    $id = $factura->insertFactura();
 
-if($count == 0){
-    file_put_contents("facturas/".str_replace(' ', '', $data['nombre']).$data['fecha'].".pdf", $factura);
+    file_put_contents("facturas/".$id.".pdf", $facturaRender);
+
+    header('Location: list.php');
+    die();
+
 } else{
-    file_put_contents("facturas/".str_replace(' ', '', $data['nombre']).$data['fecha']."[".$count."]".".pdf", $factura);
+    // Output the generated PDF to Browser
+    $pdf->stream('factura',[ "Attachment" => false]);
 }
-
-
-// Output the generated PDF to Browser
-$pdf->stream('factura',[ "Attachment" => false]);
-
-?>
