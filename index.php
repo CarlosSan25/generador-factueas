@@ -105,7 +105,7 @@ include 'head.php';
                         <div class="col-7">
                             <div class="mb-3">
                                 <label for="conceptoFactura" class="form-label">Concepto</label>
-                                <input type="text" class="form-control" id="conceptoFactura" name="conceptoFactura[]" required>
+                                <input type="text" class="form-control" id="conceptoFactura" name="conceptoFactura[]">
                             </div>
                         </div>
                         <div class="col-4">
