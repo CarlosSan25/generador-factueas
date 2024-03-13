@@ -1,5 +1,11 @@
 <?php
 
+session_start();
+
+if(!isset($_SESSION['LOGGED']) || $_SESSION['LOGGED'] !== true){
+    header('Location: login.php');
+}
+
 include 'head.php';
 
 ?>

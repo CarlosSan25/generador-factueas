@@ -1,7 +1,9 @@
 <?php
-$action = "pdf.php";
-if(isset($_GET["token"]) && $_GET["token"] == "gasaltur"){
-    $action = "pdf-gasaltur.php";
+
+session_start();
+
+if(!isset($_SESSION['LOGGED']) || $_SESSION['LOGGED'] !== true){
+    header('Location: login.php');
 }
 
 include 'head.php';
@@ -12,7 +14,7 @@ include 'head.php';
 		padding-left: 5px;
 	}
 </style>
-<form action="<?=$action?>" method="post" class="p-3">
+<form action="pdf.php" method="post" class="p-3">
         <div class="row justify-content-evenly mt-4 p-2">
             <div class="col-12 col-md-5">
                 <h2>Datos del cliente</h2>

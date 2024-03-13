@@ -1,5 +1,11 @@
 <?php
 
+session_start();
+
+if(!isset($_SESSION['LOGGED']) || $_SESSION['LOGGED'] !== true){
+    header('Location: login.php');
+}
+
 require_once 'dompdf/autoload.inc.php';
 require_once 'class/factura.php';
 use Dompdf\Dompdf;
