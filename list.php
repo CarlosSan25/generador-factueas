@@ -11,7 +11,7 @@ include 'head.php';
 			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 		</div>
 	</div>
-	<div class="table-responsive overflow-x-visible overflow-y-scroll m-md-2 mt-md-3" id="table-container"></div>
+	<div class="table-responsive m-md-2 mt-md-3" id="table-container"></div>
 </body>
 <script>
 	$(document).ready(function(){

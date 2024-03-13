@@ -54,8 +54,8 @@ if(!empty($token) && $token == 'D1ktghOZ5MHRD1tff1N3'){
     
             $html = '';
     
-            $html .= '<table class="table table-striped table-primary">
-                <tr>
+            $html .= '<table class="table table-striped table-default">
+                <tr class="table-primary">
                     <th>Nº de Factura</th>
                     <th>Cliente</th>
                     <th>Fecha de Factura</th>
@@ -66,10 +66,10 @@ if(!empty($token) && $token == 'D1ktghOZ5MHRD1tff1N3'){
                 foreach($facturas as $singleFactura){
                     $html .= '
                     <tr>
-                        <td>'.$singleFactura['numeracion'].'<br><small>'.ucfirst($singleFactura['tipoCliente']).'</small></td>
-                        <td>'.$singleFactura['cliente'].'<br><small>'.$singleFactura['tipoID'].' - '.$singleFactura['clienteID'].'</small></td>
-                        <td>'.date('d/m/Y',strtotime($singleFactura['fecha'])).'</td>
-                        <td>'.str_replace('.', ',', $singleFactura['total']).' €</td>
+                        <td class="align-middle">'.$singleFactura['numeracion'].'<br><small>'.ucfirst($singleFactura['tipoCliente']).'</small></td>
+                        <td class="align-middle">'.$singleFactura['cliente'].'<br><small>'.$singleFactura['tipoID'].' - '.$singleFactura['clienteID'].'</small></td>
+                        <td class="align-middle">'.date('d/m/Y',strtotime($singleFactura['fecha'])).'</td>
+                        <td class="align-middle">'.str_replace('.', ',', $singleFactura['total']).' €</td>
                         <td class="text-center">
                             <div class="btn-group">
                             <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">

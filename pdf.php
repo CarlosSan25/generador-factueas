@@ -155,7 +155,7 @@ $html =
     </div>
     <div class="fecha_factura">
         <span style="border-bottom: solid 1px;"><strong>FECHA FACTURA</strong></span><br>
-        <span>'.$data['fecha'].'</span>
+        <span>'.date('d/m/Y',strtotime($data['fecha'])).'</span>
     </div>
     <table class="container">
         <thead>
@@ -208,10 +208,10 @@ $html .= '<tbody>
                 <td class="total-der">'.$total.' €<td>
             </tr>
         </table>
-        <p class="foot info">C/ Calle de ejemplo de la empresa, 3 - Telf. y Fax 965 11 22 33 - empresa@dominio.com - 03526 MADRID</p>
-        <small class="foot">A los efectos previstos en la Ley Orgánica 15/1999, de 13 de diciembre, sobre Protección de Datos de Carácter Personal se le informa que los datos personales proporcionados se incorporarán (o actualzarán) a los ficheros de EMPRESA S.L. con dirección Calle de ejemplo de la empresa, 3 de Madrid. La finalidad del tratamiento de los datos será la de gestionar la facturación de la entidad. Los datos personales solicitados en este documento son decarácter obligatorio, por la que su no cumplimentación supone la imposibilidad de su inclusión en los ficheros antes descritos y de cumplir con la finalidad definida en el párrafo anterior. Ud. tiene derecho al acceso, rectificación, cancelacióny oposición en los términos previstos en la Ley que podrá ejercitar mediante escrito dirigido al responsable de los mismos en la dirección anteriormente indicada.
+        <p class="foot info">C/ Periodista Espinosa Echevarría, 3 - Telf. 687 73 05 10 - gasaltur@hotmail.com - 03006 ALICANTE</p>
+        <small class="foot">A los efectos previstos en la Ley Orgánica 15/1999, de 13 de diciembre, sobre Protección de Datos de Carácter Personal se le informa que los datos personales proporcionados se incorporarán (o actualzarán) a los ficheros de GASALTUR SERVICIOS INTEGRALES S.L. con dirección C/ Periodista Espinosa Echevarría Nº3 Bj de Alicante. La finalidad del tratamiento de los datos será la de gestionar la facturación de la entidad. Los datos personales solicitados en este documento son decarácter obligatorio, por la que su no cumplimentación supone la imposibilidad de su inclusión en los ficheros antes descritos y de cumplir con la finalidad definida en el párrafo anterior. Ud. tiene derecho al acceso, rectificación, cancelacióny oposición en los términos previstos en la Ley que podrá ejercitar mediante escrito dirigido al responsable de los mismos en la dirección anteriormente indicada.
         </small>
-        <p class="lateral">Registro Mercantil de Madrid, Tomo 2.394, Libro 8, de la Sección 2ª, Hoja B-24267, Inscripción 1ª CIF B-25791259 - EMPRESA S.L.</p>
+        <p class="lateral">Registro Mercantil de Alicante, Tomo 2.394, Libro 0, de la Sección 8ª, Hoja A-62266, Inscripción 1ª CIF B-53491551 - GASALTUR SERVICIOS INTEGRALES S.L.</p>
         </body>';
 
 $pdf = new Dompdf($options);
